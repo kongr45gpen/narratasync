@@ -1,11 +1,16 @@
 <template>
   <div class="narrative-table-container">
+    <!-- Welcome section -->
+    <div class="welcome-section">
+      <h1 class="welcome-heading">Welcome to Narratasync!</h1>
+    </div>
+
     <v-data-table
-      :headers="headers"
-      :items="narratives"
       class="narrative-table"
+      :headers="headers"
       hide-default-footer
       item-value="id"
+      :items="narratives"
     >
       <template #item.thumbnail="{ item }">
         <div class="thumbnail-cell">
@@ -81,6 +86,21 @@
         </div>
       </template>
     </v-data-table>
+
+    <!-- Decorative pattern -->
+    <div class="table-footer-pattern">
+      <div class="pattern-container">
+        <div class="pattern-dots">
+          <div v-for="i in 24" :key="i" class="dot" :style="{ animationDelay: `${i * 0.1}s` }" />
+        </div>
+        <div class="pattern-waves">
+          <svg class="wave-svg" viewBox="0 0 120 20" xmlns="http://www.w3.org/2000/svg">
+            <path class="wave-path" d="M0,10 Q15,0 30,10 T60,10 T90,10 T120,10" />
+            <path class="wave-path wave-path-2" d="M0,15 Q15,5 30,15 T60,15 T90,15 T120,15" />
+          </svg>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -168,6 +188,24 @@
   margin: 0
   padding: 0
 
+.welcome-section
+  padding: 60px 24px 40px
+  text-align: center
+
+.welcome-heading
+  font-family: 'Zalando Sans Expanded', 'Helvetica Neue', Arial, sans-serif
+  font-weight: 400
+  font-size: 2.5rem
+  color: rgba(var(--v-theme-on-surface), 0.87)
+  margin: 0
+  letter-spacing: 1px
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+
+  // Dark theme variant
+  .v-theme--dark &
+    color: rgba(var(--v-theme-on-surface), 0.95)
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.05)
+
 .narrative-table
   width: 100%
   max-width: 1400px;
@@ -247,7 +285,6 @@
     color: rgba(255, 255, 255, 0.9)
     font-size: 1.1rem
 
-  // Dark theme alternative
   .v-theme--dark &
     background: linear-gradient(135deg, #0F7F3E 0%, #1B4B68 100%) !important
     box-shadow: 0 4px 15px rgba(15, 127, 62, 0.4)
@@ -263,4 +300,78 @@
   :deep(.v-icon)
     color: rgba(var(--v-theme-on-surface), 0.5)
     font-size: 1rem
+
+// Decorative pattern at the end of table
+.table-footer-pattern
+  margin-top: 40px
+  padding: 30px 0
+  position: relative
+  overflow: hidden
+
+.pattern-container
+  max-width: 1400px
+  margin: 0 auto
+  position: relative
+  height: 60px
+
+.pattern-dots
+  display: flex
+  justify-content: center
+  align-items: center
+  gap: 8px
+  margin-bottom: 20px
+
+.dot
+  width: 4px
+  height: 4px
+  border-radius: 50%
+  background: rgba(var(--v-theme-primary), 0.3)
+  animation: pulse-dot 2s ease-in-out infinite
+  opacity: 0.6
+
+  // Dark theme variant
+  .v-theme--dark &
+    background: rgba(var(--v-theme-primary), 0.2)
+
+.pattern-waves
+  position: absolute
+  bottom: 0
+  left: 50%
+  transform: translateX(-50%)
+  width: 100%
+  max-width: 400px
+
+.wave-svg
+  width: 100%
+  height: 20px
+  opacity: 0.4
+
+.wave-path
+  fill: none
+  stroke: rgba(var(--v-theme-primary), 0.4)
+  stroke-width: 1
+  stroke-linecap: round
+  animation: wave-flow 4s ease-in-out infinite
+
+.wave-path-2
+  stroke: rgba(var(--v-theme-secondary), 0.3)
+  animation-delay: 1s
+  animation-duration: 5s
+
+// Animations
+@keyframes pulse-dot
+  0%, 100%
+    opacity: 0.3
+    transform: scale(1)
+  50%
+    opacity: 0.8
+    transform: scale(1.2)
+
+@keyframes wave-flow
+  0%, 100%
+    stroke-dasharray: 0 100
+    stroke-dashoffset: 0
+  50%
+    stroke-dasharray: 50 50
+    stroke-dashoffset: -25
 </style>
