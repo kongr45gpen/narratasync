@@ -2,8 +2,10 @@
   <div class="playful-header">
     <div class="header-content">
       <div class="app-title">
-        <span class="emoji-decoration">📚</span>
-        <span class="app-name">Narratasync</span>
+        <router-link class="title-link" to="/">
+          <span class="emoji-decoration">📚</span>
+          <span class="app-name">Narratasync</span>
+        </router-link>
       </div>
 
       <div class="header-actions">
@@ -100,6 +102,20 @@
     display: flex
     align-items: center
     gap: 12px
+
+  .title-link
+    display: flex
+    align-items: center
+    gap: 12px
+    text-decoration: none
+    transition: all 0.3s ease
+    border-radius: 12px
+    padding: 8px
+    margin: -8px
+
+    &:hover
+      transform: scale(1.05)
+      background: rgba(255, 255, 255, 0.1)
 
   .emoji-decoration
     font-size: 1.5rem
