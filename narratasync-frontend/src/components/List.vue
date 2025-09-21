@@ -11,7 +11,30 @@
       hide-default-footer
       item-value="id"
       :items="narratives"
+      :loading="isLoading"
+      loading-text="Loading narratives..."
     >
+      <!-- Error and empty states -->
+      <template #no-data>
+        <div v-if="error && !isLoading" class="error-state">
+          <v-icon color="error" size="48">mdi-alert-circle</v-icon>
+          <h3 class="error-title">Failed to load narratives</h3>
+          <p class="error-message">{{ error }}</p>
+          <v-btn
+            color="primary"
+            variant="outlined"
+            @click="fetchNarratives"
+          >
+            Retry
+          </v-btn>
+        </div>
+
+        <div v-else-if="!error && !isLoading && narratives.length === 0" class="empty-state">
+          <v-icon color="grey" size="48">mdi-book-open</v-icon>
+          <h3 class="empty-title">No narratives found</h3>
+          <p class="empty-message">Check back later for new narratives!</p>
+        </div>
+      </template>
       <template #item.thumbnail="{ item }">
         <div class="thumbnail-cell">
           <v-img
@@ -19,7 +42,7 @@
             aspect-ratio="16/9"
             class="thumbnail-image"
             cover
-            :src="item.thumbnail"
+            :src="item.thumbnail || 'https://picsum.photos/200/120?random=default'"
           />
         </div>
       </template>
@@ -34,27 +57,27 @@
         <div class="author-cell">
           <v-chip
             class="author-chip"
-            :color="item.authorColor"
+            :color="item.authorColor || 'grey'"
             size="small"
             variant="tonal"
           >
             <v-avatar class="author-avatar" start>
-              <v-img alt="Author avatar" :src="item.authorAvatar" />
+              <v-img alt="Author avatar" :src="item.authorAvatar || 'https://i.pravatar.cc/40?img=default'" />
             </v-avatar>
-            {{ item.authorName }}
+            {{ item.authorName || item.author || 'Unknown' }}
           </v-chip>
         </div>
       </template>
 
       <template #item.duration="{ item }">
         <div class="duration-cell">
-          <span class="muted-text">{{ item.duration }}</span>
+          <span class="muted-text">{{ item.duration || 'N/A' }}</span>
         </div>
       </template>
 
       <template #item.number="{ item }">
         <div class="number-cell">
-          <span class="muted-text">{{ item.number }}</span>
+          <span class="muted-text">{{ item.number || 'N/A' }}</span>
         </div>
       </template>
 
@@ -105,6 +128,20 @@
 </template>
 
 <script setup lang="ts">
+  import { onMounted, ref } from 'vue'
+
+  interface Narrative {
+    id: string
+    title: string
+    thumbnail: string | null
+    author: string | null
+    authorName?: string
+    authorAvatar?: string
+    authorColor?: string
+    duration?: string
+    number?: string
+  }
+
   const headers = [
     {
       title: 'Thumbnail',
@@ -143,40 +180,36 @@
     },
   ]
 
-  const narratives = [
-    {
-      id: 1,
-      thumbnail: 'https://picsum.photos/200/120?random=1',
-      title: 'The evil scientist and his magical chair',
-      authorName: 'Kostas',
-      authorAvatar: 'https://i.pravatar.cc/40?img=1',
-      authorColor: 'blue-grey',
-      duration: '02:14',
-      number: '1st',
-    },
-    {
-      id: 2,
-      thumbnail: 'https://picsum.photos/200/120?random=2',
-      title: 'Adventures in the Digital Realm',
-      authorName: 'Maria',
-      authorAvatar: 'https://i.pravatar.cc/40?img=2',
-      authorColor: 'purple',
-      duration: '05:32',
-      number: '2nd',
-    },
-    {
-      id: 3,
-      thumbnail: 'https://picsum.photos/200/120?random=3',
-      title: 'The Mystery of the Lost Algorithm',
-      authorName: 'Alex',
-      authorAvatar: 'https://i.pravatar.cc/40?img=3',
-      authorColor: 'teal',
-      duration: '03:45',
-      number: '3rd',
-    },
-  ]
+  const narratives = ref<Narrative[]>([])
+  const isLoading = ref(true)
+  const error = ref<string | null>(null)
 
-  function participate (id: number) {
+  async function fetchNarratives () {
+    try {
+      isLoading.value = true
+      error.value = null
+
+      const response = await fetch('http://localhost:3002/')
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+      narratives.value = data
+    } catch (error_) {
+      error.value = error_ instanceof Error ? error_.message : 'Failed to fetch narratives'
+      console.error('Error fetching narratives:', error_)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  onMounted(() => {
+    fetchNarratives()
+  })
+
+  function participate (id: string) {
     console.log(`Participating in narrative ${id}`)
     // TODO: Add participation logic here
   }
@@ -300,6 +333,21 @@
   :deep(.v-icon)
     color: rgba(var(--v-theme-on-surface), 0.5)
     font-size: 1rem
+
+// Error and empty states
+.error-state, .empty-state
+  text-align: center
+  padding: 40px 20px
+
+.error-title, .empty-title
+  margin: 16px 0 8px
+  font-size: 1.25rem
+  font-weight: 500
+
+.error-message, .empty-message
+  margin: 0 0 24px
+  color: rgba(var(--v-theme-on-surface), 0.6)
+  font-size: 0.875rem
 
 // Decorative pattern at the end of table
 .table-footer-pattern
