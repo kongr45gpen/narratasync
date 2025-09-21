@@ -1,6 +1,11 @@
 use diesel::prelude::*;
 use dotenvy::dotenv;
-use std::env;
+use std::rc::Rc;
+use std::{env, sync::Arc};
+
+use serde_json::json;
+
+use axum::{Router, response::Json, routing::get};
 
 pub mod models;
 pub mod schema;
@@ -13,19 +18,30 @@ fn establish_connection() -> SqliteConnection {
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     use crate::models::Scenario;
     use crate::schema::scenario::dsl::*;
 
-    let connection = &mut establish_connection();
+    // build our application with a single route
+    let app = Router::new().route(
+        "/",
+        get(|| async {
+            let connection = &mut establish_connection();
 
-    let results = scenario
-        .limit(5)
-        .load::<Scenario>(connection)
-        .expect("Error loading scenarios");
+            let results = Arc::new(
+                scenario
+                    .limit(5)
+                    .load::<Scenario>(connection)
+                    .expect("Error loading scenarios"),
+            );
 
-    println!("{:?}", results);
+            println!("{:?}", results);
 
-    println!("Hello, world!");
+            Json(json!(&*results))
+        }),
+    );
+
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3002").await.unwrap();
+    axum::serve(listener, app).await.unwrap();
 }
-

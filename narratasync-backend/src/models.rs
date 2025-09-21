@@ -1,4 +1,5 @@
 use diesel::prelude::*;
+use serde::Serialize;
 
 #[derive(Queryable,Selectable,Debug)]
 #[diesel(table_name = crate::schema::users)]
@@ -11,7 +12,7 @@ pub struct User {
     pub token: String,
 }
 
-#[derive(Queryable,Selectable,Debug)]
+#[derive(Queryable,Selectable,Debug,Serialize,Clone)]
 #[diesel(table_name = crate::schema::scenario)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct Scenario {
