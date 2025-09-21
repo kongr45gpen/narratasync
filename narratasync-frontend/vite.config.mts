@@ -50,9 +50,14 @@ export default defineConfig({
       fontsource: {
         families: [
           {
-            name: 'Roboto',
-            weights: [100, 300, 400, 500, 700, 900],
+            name: 'Open Sans',
+            weights: [300, 400, 500, 600, 700, 800],
             styles: ['normal', 'italic'],
+          },
+          {
+            name: 'Zalando Sans Expanded',
+            weights: [300, 400, 500, 600, 700],
+            styles: ['normal'],
           },
         ],
       },

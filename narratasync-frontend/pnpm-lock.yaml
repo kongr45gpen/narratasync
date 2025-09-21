@@ -8,9 +8,12 @@ importers:
 
   .:
     dependencies:
-      '@fontsource/roboto':
+      '@fontsource/open-sans':
         specifier: 5.2.7
         version: 5.2.7
+      '@fontsource/zalando-sans-expanded':
+        specifier: ^5.0.0
+        version: 5.2.1
       '@mdi/font':
         specifier: 7.4.47
         version: 7.4.47
@@ -316,8 +319,11 @@ packages:
     resolution: {integrity: sha512-Z5kJ+wU3oA7MMIqVR9tyZRtjYPr4OC004Q4Rw7pgOKUOKkJfZ3O24nz3WYfGRpMDNmcOi3TwQOmgm7B7Tpii0w==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@fontsource/roboto@5.2.7':
-    resolution: {integrity: sha512-fca6Jtyxn6kPR51+TTTMCFm0FOhnKaLEYYiAQc8P/4iFCKoKGR0aX89QR4CfP+N64RPXJus64UxhJaVENnSM6Q==}
+  '@fontsource/open-sans@5.2.7':
+    resolution: {integrity: sha512-8yfgDYjE5O0vmTPdrcjV35y4yMnctsokmi9gN49Gcsr0sjzkMkR97AnKDe6OqZh2SFkYlR28fxOvi21bYEgMSw==}
+
+  '@fontsource/zalando-sans-expanded@5.2.1':
+    resolution: {integrity: sha512-UydYxW7lbGuXGuf5sx78hSck+QamQGQKgZcDVpiMYpFxlAK8Hb0eoyhzYoltRLKBDiUucFGGGokBQ/7vq9yWFA==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -2128,7 +2134,9 @@ snapshots:
       '@eslint/core': 0.15.2
       levn: 0.4.1
 
-  '@fontsource/roboto@5.2.7': {}
+  '@fontsource/open-sans@5.2.7': {}
+
+  '@fontsource/zalando-sans-expanded@5.2.1': {}
 
   '@humanfs/core@0.19.1': {}
 
